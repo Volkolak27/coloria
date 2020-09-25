@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_1x1"
+        android:orderInCategory="100"
+        android:title="@string/action_1x1"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_2x2"
+        android:orderInCategory="100"
+        android:title="@string/action_2x2"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_4x4"
+        android:orderInCategory="100"
+        android:title="@string/action_4x4"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_full_screen"
+        android:checkable="true"
+        android:orderInCategory="100"
+        android:title="@string/action_full_screen"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_tap_sound"
+        android:checkable="true"
+        android:orderInCategory="100"
+        android:title="@string/action_tap_sound"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_animation"
+        android:checkable="true"
+        android:orderInCategory="100"
+        android:title="@string/action_animation"
+        app:showAsAction="never" />
+</menu>
