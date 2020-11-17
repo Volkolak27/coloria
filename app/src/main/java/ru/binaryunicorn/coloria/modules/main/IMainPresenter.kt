@@ -4,8 +4,9 @@ import ru.binaryunicorn.coloria.pattern.IMvpPresenter
 
 interface IMainPresenter : IMvpPresenter<IMainView>
 {
-    fun onBackAction()
+    fun fullscreenModeChanged(enabled: Boolean)
 
-    fun routeToTiletapScreen()
-    fun routeToAbout()
+    fun backAction()
+    fun toAboutAction()
+    fun alertMessageAction(msg: String)
 }

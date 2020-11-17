@@ -4,11 +4,10 @@
     <string name="about_text">Тестируйте экран или убивайте время</string>
     <string name="action_about">О приложении</string>
     <string name="action_animation">Анимация</string>
-    <string name="action_back">Назад</string>
     <string name="action_full_screen">Полный экран</string>
+    <string name="action_rgb">RGB тест</string>
     <string name="action_settings">Настройки</string>
     <string name="action_tap_sound">Звук нажатий</string>
-    <string name="animation_caption">Настройки анимации:</string>
     <string name="animation_enabled">Включить анимацию</string>
     <string name="animation_speed">Скорость анимации:</string>
     <string name="animation_speed_fast">Быстрая</string>

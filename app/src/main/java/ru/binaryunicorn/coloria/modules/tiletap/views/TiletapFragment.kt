@@ -4,78 +4,57 @@ import android.media.SoundPool
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import ru.binaryunicorn.coloria.App
 import ru.binaryunicorn.coloria.R
-import ru.binaryunicorn.coloria.customviews.TileTapView
-import ru.binaryunicorn.coloria.modules.ModuleStorage
-import ru.binaryunicorn.coloria.modules.main.presenters.MainPresenter
-import ru.binaryunicorn.coloria.modules.tiletap.ITiletapPresenter
+import ru.binaryunicorn.coloria.databinding.TiletapFragmentBinding
+import ru.binaryunicorn.coloria.modules.main.SharedMainViewModel
+import ru.binaryunicorn.coloria.modules.settings.SharedSettingsViewModel
 import ru.binaryunicorn.coloria.modules.tiletap.ITiletapView
 import ru.binaryunicorn.coloria.modules.tiletap.presenters.TiletapPresenter
-import ru.binaryunicorn.coloria.pattern.BasePresenter
+import javax.inject.Inject
 
 class TiletapFragment : Fragment(), ITiletapView
 {
-    private var _presenter: ITiletapPresenter? = null
-
-    private var _fullScreenModeChecked: Boolean = false
-    private var _tapSoundChecked: Boolean = false
-    private var _animationChecked: Boolean = false
+    @Inject lateinit var presenter: TiletapPresenter
+    override var initializated = false
+    private var _binding: TiletapFragmentBinding? = null
+    private val _sharedMainViewModel: SharedMainViewModel by activityViewModels()
+    private val _sharedSettingsViewModel: SharedSettingsViewModel by activityViewModels()
 
     private var _actionMenu: Menu? = null
-    private var _tiletapField: TileTapView? = null
 
-    companion object
-    {
-        fun newInstance(): TiletapFragment
-        {
-            val args = Bundle()
-
-            return TiletapFragment().also {
-                it.arguments = args
-            }
-        }
-    }
-
-    fun inject(presenter: ITiletapPresenter)
-    {
-        _presenter = presenter
-    }
+    private var _tapSoundChecked = false
+    private var _animationChecked = false
 
     //// IMvpView ////
 
-    override fun bind(view: View)
+    override fun viewSelfSetup()
     {
-        _tiletapField = view.findViewById(R.id.tiletapField)
-    }
-
-    override fun setupUserInteractions()
-    {
-        // empty
+        _sharedSettingsViewModel.settingsChanged().observe(this,
+            Observer<String>
+            {
+                if (initializated)
+                {
+                    presenter.refreshTiletapFieldAction()
+                }
+            }
+        )
     }
 
     //// Fragment ////
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        val context = requireActivity()
-        val view = context.layoutInflater.inflate(R.layout.tiletap_fragment, container, false)
+        _binding = TiletapFragmentBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
-        bind(view)
+        App.appComponent.inject(this)
 
-        if (savedInstanceState == null)
-        {
-            _presenter?.setupEasyLaunchFlag()
-        }
-        else
-        {
-            savedInstanceState.getString(BasePresenter.PRESENTER_GUID)?.let {
-				_presenter = ModuleStorage.obtainPresenter(it) as TiletapPresenter
-				_presenter?.attachView(this)
-			}
-        }
-
-        _presenter?.viewIsReady()
-        return view
+        presenter.attachView(this)
+        presenter.viewIsReady()
+        return _binding?.root
     }
 
     override fun onResume()
@@ -89,25 +68,21 @@ class TiletapFragment : Fragment(), ITiletapView
             soundPool.load(context, R.raw.tap03, 1)
         )
 
-        _tiletapField?.setSoundpoolAndSounds(soundPool, sounds)
+        _binding?.tiletapField?.updateSounds(soundPool, sounds)
+        initializated = true
     }
 
     override fun onPause()
     {
         super.onPause()
-        _tiletapField?.releaseSoundpool()
+        _binding?.tiletapField?.releaseSounds()
     }
 
-    override fun onDestroy()
+    override fun onDestroyView()
     {
-        super.onDestroy()
-        _presenter?.destroy()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle)
-    {
-        super.onSaveInstanceState(outState)
-        outState.putString(BasePresenter.PRESENTER_GUID, _presenter?.getGUID())
+        super.onDestroyView()
+        presenter.destroy()
+        _binding = null
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater)
@@ -116,9 +91,8 @@ class TiletapFragment : Fragment(), ITiletapView
         inflater.inflate(R.menu.action_tiletaps, menu)
 
         _actionMenu = menu.apply {
-            findItem(R.id.action_full_screen).isChecked = _fullScreenModeChecked;
-            findItem(R.id.action_tap_sound).isChecked = _tapSoundChecked;
-            findItem(R.id.action_animation).isChecked = _animationChecked;
+            findItem(R.id.action_tap_sound).isChecked = _tapSoundChecked
+            findItem(R.id.action_animation).isChecked = _animationChecked
         }
     }
 
@@ -126,13 +100,14 @@ class TiletapFragment : Fragment(), ITiletapView
     {
         when (item.itemId)
         {
-            R.id.action_1x1 -> _presenter?.fieldSizeChanged(1, 1)
-            R.id.action_2x2 -> _presenter?.fieldSizeChanged(2, 2)
-            R.id.action_4x4 -> _presenter?.fieldSizeChanged(4, 4)
-            R.id.action_settings -> _presenter?.routeToSettings()
-            R.id.action_full_screen -> _actionMenu?.findItem(item.itemId)?.let { _presenter?.fullscreenModeChanged(!it.isChecked) }
-            R.id.action_tap_sound -> _actionMenu?.findItem(item.itemId)?.let { _presenter?.tapSoundChanged(!it.isChecked) }
-            R.id.action_animation -> _actionMenu?.findItem(item.itemId)?.let { _presenter?.animationChanged(!it.isChecked) }
+            R.id.action_1x1 -> presenter.fieldSizeChanged(1, 1)
+            R.id.action_2x2 -> presenter.fieldSizeChanged(2, 2)
+            R.id.action_4x4 -> presenter.fieldSizeChanged(4, 4)
+            R.id.action_rgb -> presenter.rgbTestAction()
+            R.id.action_settings -> presenter.toSettingsAction()
+            R.id.action_full_screen -> _actionMenu?.findItem(item.itemId)?.let { presenter.fullscreenModeChanged(true) }
+            R.id.action_tap_sound -> _actionMenu?.findItem(item.itemId)?.let { presenter.tapSoundChanged(!it.isChecked) }
+            R.id.action_animation -> _actionMenu?.findItem(item.itemId)?.let { presenter.animationChanged(!it.isChecked) }
         }
 
         return super.onOptionsItemSelected(item)
@@ -142,26 +117,34 @@ class TiletapFragment : Fragment(), ITiletapView
 
     override fun updateFieldSize(horizontalCount: Int, verticalCount: Int)
     {
-        _tiletapField?.generateField(horizontalCount, verticalCount)
+        try
+        {
+            _binding?.tiletapField?.disableRgbTest()
+            _binding?.tiletapField?.generateField(horizontalCount, verticalCount)
+        }
+        catch (e: OutOfMemoryError)
+        {
+            _sharedMainViewModel.toastMessage(getString(R.string.field_size_error))
+            presenter.resetTiletapField()
+        }
     }
 
-    override fun updateRandomColorForTile(horizontalPos: Int, verticalPos: Int)
+    override fun updateTileWithRandomColor(horizontalPos: Int, verticalPos: Int)
     {
-        _tiletapField?.setRandomColorForTile(horizontalPos, verticalPos)
+        _binding?.tiletapField?.setRandomColorForTile(horizontalPos, verticalPos)
     }
 
     override fun updateFullscreenMode(enabled: Boolean)
     {
-        _fullScreenModeChecked = enabled
-        _tiletapField?.keepScreenOn = enabled
-        _actionMenu?.findItem(R.id.action_full_screen)?.isChecked = enabled
+        _binding?.tiletapField?.keepScreenOn = enabled
+        _sharedMainViewModel.fullscreenMode(enabled)
     }
 
     override fun updateTapSound(enabled: Boolean)
     {
         _tapSoundChecked = enabled
-        _tiletapField?.tapSoundEnabled(enabled)
         _actionMenu?.findItem(R.id.action_tap_sound)?.isChecked = enabled
+        _binding?.tiletapField?.soundEnabled(enabled)
     }
 
     override fun updateAnimation(enabled: Boolean)
@@ -172,6 +155,30 @@ class TiletapFragment : Fragment(), ITiletapView
 
     override fun refreshTiletapField()
     {
-        _tiletapField?.refresh()
+        _binding?.tiletapField?.refresh()
+    }
+
+    override fun showFieldSizeError()
+    {
+        _sharedMainViewModel.toastMessage(getString(R.string.field_size_error))
+    }
+
+    override fun openRgbTest()
+    {
+        _binding?.tiletapField?.let {
+            if (it.isRgbTest())
+            {
+                it.disableRgbTest()
+            }
+            else
+            {
+                it.enableRgbTest()
+            }
+        }
+    }
+
+    override fun openSettings()
+    {
+        findNavController().navigate(R.id.navToSettings)
     }
 }

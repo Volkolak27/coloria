@@ -18,6 +18,11 @@
         android:title="@string/action_4x4"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_rgb"
+        android:orderInCategory="100"
+        android:title="@string/action_rgb"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_settings"
         android:icon="@drawable/action_settings"
         android:orderInCategory="100"
@@ -25,7 +30,6 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_full_screen"
-        android:checkable="true"
         android:orderInCategory="100"
         android:title="@string/action_full_screen"
         app:showAsAction="never" />

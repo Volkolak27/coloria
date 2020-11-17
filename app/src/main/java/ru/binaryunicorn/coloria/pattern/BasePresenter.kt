@@ -2,10 +2,10 @@ package ru.binaryunicorn.coloria.pattern
 
 import java.util.*
 
-abstract class BasePresenter<T : IMvpView>(view: T?) : IMvpPresenter<T>
+abstract class BasePresenter<T : IMvpView> : IMvpPresenter<T>
 {
-    private var _view: T? = view
-    private val _guid: String = UUID.randomUUID().toString()
+    private val _guid = UUID.randomUUID().toString()
+    private var _view: T? = null
 
     companion object
     {
@@ -13,6 +13,11 @@ abstract class BasePresenter<T : IMvpView>(view: T?) : IMvpPresenter<T>
     }
 
     //// IMvpPresenter ////
+
+    override fun obtainGUID(): String
+    {
+        return _guid
+    }
 
     override fun attachView(view: T)
     {
@@ -29,14 +34,9 @@ abstract class BasePresenter<T : IMvpView>(view: T?) : IMvpPresenter<T>
         return _view
     }
 
-    override fun getGUID(): String
-    {
-        return _guid
-    }
-
     override fun viewIsReady()
     {
-        // empty
+        _view?.viewSelfSetup()
     }
 
     override fun destroy()

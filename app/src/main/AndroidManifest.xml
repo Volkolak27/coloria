@@ -2,9 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="ru.binaryunicorn.coloria">
 
+	<uses-feature android:glEsVersion="0x00020000" android:required="true" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 
 	<application
+		android:name=".App"
 		android:label="${appName}"
 		android:icon="@mipmap/app_icon"
 		android:theme="@style/AppTheme"

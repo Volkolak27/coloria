@@ -1,4 +1,4 @@
-package ru.binaryunicorn.coloria.enums
+package ru.binaryunicorn.coloria.extra.enums
 
 import android.content.Context
 import android.widget.ArrayAdapter
@@ -20,7 +20,7 @@ enum class AnimationSpeed(private val id: Int, private val stringResId: Int)
 
         fun stringAdapter(context: Context): ArrayAdapter<String>
         {
-            val items: MutableList<String> = mutableListOf()
+            val items = mutableListOf<String>()
 
             for (animationSpeed in values())
             {
@@ -37,5 +37,5 @@ enum class AnimationSpeed(private val id: Int, private val stringResId: Int)
     //// Public ////
 
     fun id(): Int = id
-    fun obtainString(context: Context) = context.resources.getString(stringResId)
+    fun obtainString(context: Context): String = context.resources.getString(stringResId)
 }

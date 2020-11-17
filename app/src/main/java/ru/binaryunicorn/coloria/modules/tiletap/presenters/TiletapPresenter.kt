@@ -1,41 +1,22 @@
 package ru.binaryunicorn.coloria.modules.tiletap.presenters
 
-import android.os.Handler
-import android.os.Message
 import android.util.Log
-import ru.binaryunicorn.coloria.AppConst
-import ru.binaryunicorn.coloria.enums.AnimationSpeed
-import ru.binaryunicorn.coloria.enums.AnimationType
+import kotlinx.coroutines.*
+import ru.binaryunicorn.coloria.App
+import ru.binaryunicorn.coloria.extra.enums.AnimationSpeed
+import ru.binaryunicorn.coloria.extra.enums.AnimationType
 import ru.binaryunicorn.coloria.managers.appsettings.IAppSettings
-import ru.binaryunicorn.coloria.modules.tiletap.ITiletapInput
-import ru.binaryunicorn.coloria.modules.tiletap.ITiletapOutput
 import ru.binaryunicorn.coloria.modules.tiletap.ITiletapPresenter
 import ru.binaryunicorn.coloria.modules.tiletap.ITiletapView
 import ru.binaryunicorn.coloria.pattern.BasePresenter
 import java.util.*
+import javax.inject.Inject
 
-class TiletapPresenter(view: ITiletapView, appSettings: IAppSettings, output: ITiletapOutput?) : BasePresenter<ITiletapView>(view), ITiletapPresenter, ITiletapInput
+class TiletapPresenter @Inject constructor(appSettings: IAppSettings) : BasePresenter<ITiletapView>(), ITiletapPresenter
 {
-    private val _moduleOutput: ITiletapOutput? = output
     private val _appSettings: IAppSettings = appSettings
 
-    private var _easyLaunchFlag: Boolean = false
-
-    companion object
-    {
-        private const val ANIMATE_STEP = 1
-    }
-
-    private var _animationHandler: Handler = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            super.handleMessage(msg)
-
-            when (msg.what)
-            {
-                ANIMATE_STEP -> _animateStep.run()
-            }
-        }
-    }
+    private var _animationJob: Job? = null
 
     //// BasePresenter ////
 
@@ -43,31 +24,17 @@ class TiletapPresenter(view: ITiletapView, appSettings: IAppSettings, output: IT
     {
         super.viewIsReady()
 
-        var horizontalSize = _appSettings.obtainHorizontalCount()
-        var verticalSize = _appSettings.obtainVerticalCount()
-
-        if (_easyLaunchFlag)
-        {
-            if (horizontalSize >= 4 || verticalSize >= 4)
-            {
-                horizontalSize = 4
-                verticalSize = 4
-            }
-
-            _easyLaunchFlag = false
-        }
-
-        getView()?.updateFieldSize(horizontalSize, verticalSize)
+        getView()?.updateFieldSize(_appSettings.obtainHorizontalCount(), _appSettings.obtainVerticalCount())
         getView()?.updateTapSound(_appSettings.isTapSoundEnabled())
         getView()?.updateAnimation(_appSettings.isAnimationEnabled())
+        getView()?.updateFullscreenMode(_appSettings.isFullScreenMode())
 
-        fullscreenMode(_appSettings.isFullScreenMode())
         checkAnimationFunc()
     }
 
     override fun destroy()
     {
-        _animationHandler.removeMessages(ANIMATE_STEP)
+        _animationJob?.cancel()
     }
 
     //// ITiletapPresenter ////
@@ -81,7 +48,13 @@ class TiletapPresenter(view: ITiletapView, appSettings: IAppSettings, output: IT
 
     override fun fullscreenModeChanged(enabled: Boolean)
     {
-        fullscreenMode(enabled)
+        _appSettings.putFullScreenMode(enabled)
+        getView()?.updateFullscreenMode(enabled)
+    }
+
+    override fun rgbTestAction()
+    {
+        getView()?.openRgbTest()
     }
 
     override fun tapSoundChanged(enabled: Boolean)
@@ -97,42 +70,35 @@ class TiletapPresenter(view: ITiletapView, appSettings: IAppSettings, output: IT
         checkAnimationFunc()
     }
 
-    override fun recreateTiletapSignal()
+    override fun refreshTiletapFieldAction()
     {
         recreateTiletap()
     }
 
-    override fun setupEasyLaunchFlag()
+    override fun resetTiletapField()
     {
-        _easyLaunchFlag = true
+        val horizontalSize = App.Consts.DEFAULT_TILES_COUNT_ON_HORIZONTAL
+        val verticalSize = App.Consts.DEFAULT_TILES_COUNT_ON_VERTICAL
+
+        _appSettings.putHorizontalCount(horizontalSize)
+        _appSettings.putVerticalCount(verticalSize)
+        getView()?.updateFieldSize(horizontalSize, verticalSize)
     }
 
-    override fun routeToSettings()
+    override fun toSettingsAction()
     {
-        _moduleOutput?.routeToSettings()
-    }
-
-    //// ITiletapInput ////
-
-    override fun sendFullscreenMode(enabled: Boolean)
-    {
-        getView()?.updateFullscreenMode(enabled)
-    }
-
-    override fun recreateTiletapField()
-    {
-        recreateTiletap()
+        getView()?.openSettings()
     }
 
     //// Private ////
 
-    private val _animateStep = Runnable {
-        if (getView() == null) return@Runnable
+    private fun animateStep()
+    {
+        if (getView() == null) return
 
         val horizontalSize = _appSettings.obtainHorizontalCount()
         val verticalSize = _appSettings.obtainVerticalCount()
         val animationType = _appSettings.obtainAnimationType()
-        val animationSpeed = _appSettings.obtainAnimationSpeed()
 
         if (animationType == AnimationType.FULL)
         {
@@ -140,7 +106,7 @@ class TiletapPresenter(view: ITiletapView, appSettings: IAppSettings, output: IT
             {
                 for (x in 0 until horizontalSize)
                 {
-                    getView()?.updateRandomColorForTile(x, y)
+                    getView()?.updateTileWithRandomColor(x, y)
                 }
             }
         }
@@ -160,25 +126,11 @@ class TiletapPresenter(view: ITiletapView, appSettings: IAppSettings, output: IT
             for (i in 0 until tilesToChange.toInt())
             {
                 // одна и таже плитка может окрашиваться несколько раз, это хорошо - обеспечиваем "случайность" количества действа
-                getView()?.updateRandomColorForTile(horizontalRandomGen.nextInt(horizontalSize), verticalRandomGen.nextInt(verticalSize))
+                getView()?.updateTileWithRandomColor(horizontalRandomGen.nextInt(horizontalSize), verticalRandomGen.nextInt(verticalSize))
             }
         }
 
         getView()?.refreshTiletapField()
-
-        if (_appSettings.isAnimationEnabled())
-        {
-            _animationHandler.sendEmptyMessageDelayed(
-                ANIMATE_STEP,
-                when (animationSpeed)
-                {
-                    AnimationSpeed.SLOW -> 2000
-                    AnimationSpeed.MEDIUM -> 1200
-                    AnimationSpeed.FAST -> 600
-                    AnimationSpeed.VERYFAST -> 200
-                }
-            )
-        }
     }
 
     private fun recreateTiletap()
@@ -191,32 +143,40 @@ class TiletapPresenter(view: ITiletapView, appSettings: IAppSettings, output: IT
         }
         catch (e: OutOfMemoryError)
         {
-            Log.e(AppConst.LOGTAG, "Размер поля: $_appSettings.obtainHorizontalCount() на $_appSettings.obtainVerticalCount() - вызвал ошибку OutOfMemoryError")
-            _appSettings.putHorizontalCount(4)
-            _appSettings.putVerticalCount(4)
-            _moduleOutput?.showFieldSizeError()
+            Log.e(App.Consts.LOGTAG, "Размер поля: ${_appSettings.obtainHorizontalCount()} на ${_appSettings.obtainVerticalCount()} - вызвал ошибку OutOfMemoryError")
+            _appSettings.putHorizontalCount(App.Consts.DEFAULT_TILES_COUNT_ON_HORIZONTAL)
+            _appSettings.putVerticalCount(App.Consts.DEFAULT_TILES_COUNT_ON_VERTICAL)
+            getView()?.showFieldSizeError()
         }
 
         checkAnimationFunc()
     }
 
-    private fun fullscreenMode(enabled: Boolean)
-    {
-        getView()?.updateFullscreenMode(enabled)
-
-        if (enabled)
-        {
-            _moduleOutput?.requestFullscreenMode()
-        }
-    }
-
     private fun checkAnimationFunc()
     {
-        _animationHandler.removeMessages(ANIMATE_STEP)
-
         if (_appSettings.isAnimationEnabled())
         {
-            _animateStep.run()
+            GlobalScope.launch {
+                while (isActive && _appSettings.isAnimationEnabled())
+                {
+                    withContext(Dispatchers.Main) {
+                        animateStep()
+                    }
+                    delay(
+                        when (_appSettings.obtainAnimationSpeed())
+                        {
+                            AnimationSpeed.SLOW -> 2000L
+                            AnimationSpeed.MEDIUM -> 1200L
+                            AnimationSpeed.FAST -> 600L
+                            AnimationSpeed.VERYFAST -> 200L
+                        }
+                    )
+                }
+            }
+        }
+        else
+        {
+            _animationJob?.cancel()
         }
     }
 }

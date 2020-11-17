@@ -1,24 +1,23 @@
 package ru.binaryunicorn.coloria.modules.settings.presenters
 
-import ru.binaryunicorn.coloria.enums.AnimationSpeed
-import ru.binaryunicorn.coloria.enums.AnimationType
+import ru.binaryunicorn.coloria.extra.enums.AnimationSpeed
+import ru.binaryunicorn.coloria.extra.enums.AnimationType
 import ru.binaryunicorn.coloria.managers.appsettings.IAppSettings
-import ru.binaryunicorn.coloria.modules.settings.ISettingsOutput
 import ru.binaryunicorn.coloria.modules.settings.ISettingsPresenter
 import ru.binaryunicorn.coloria.modules.settings.ISettingsView
 import ru.binaryunicorn.coloria.pattern.BasePresenter
+import javax.inject.Inject
 
-class SettingsPresenter(view: ISettingsView, appSettings: IAppSettings, output: ISettingsOutput?) : BasePresenter<ISettingsView>(view), ISettingsPresenter
+class SettingsPresenter @Inject constructor(appSettings: IAppSettings) : BasePresenter<ISettingsView>(), ISettingsPresenter
 {
-    private val _moduleOutput: ISettingsOutput? = output
     private val _appSettings: IAppSettings = appSettings
 
-    private var _horizontalCount: Int = _appSettings.obtainHorizontalCount()
-    private var _verticalCount: Int = _appSettings.obtainVerticalCount()
-    private var _tapSoundEnable: Boolean = _appSettings.isTapSoundEnabled()
-    private var _animationEnabled: Boolean = _appSettings.isAnimationEnabled()
-    private var _animationType: AnimationType = _appSettings.obtainAnimationType()
-    private var _animationSpeed: AnimationSpeed = _appSettings.obtainAnimationSpeed()
+    private var _horizontalCount = _appSettings.obtainHorizontalCount()
+    private var _verticalCount = _appSettings.obtainVerticalCount()
+    private var _tapSoundEnable = _appSettings.isTapSoundEnabled()
+    private var _animationEnabled = _appSettings.isAnimationEnabled()
+    private var _animationType = _appSettings.obtainAnimationType()
+    private var _animationSpeed = _appSettings.obtainAnimationSpeed()
 
     //// BasePresenter ////
 
@@ -38,12 +37,18 @@ class SettingsPresenter(view: ISettingsView, appSettings: IAppSettings, output: 
 
     override fun horizontalCountChanged(count: Int)
     {
-        _horizontalCount = count
+        if (count > 0)
+        {
+            _horizontalCount = count
+        }
     }
 
     override fun verticalCountChanged(count: Int)
     {
-        _verticalCount = count
+        if (count > 0)
+        {
+            _verticalCount = count
+        }
     }
 
     override fun tapSoundEnableChanged(enabled: Boolean)
@@ -76,6 +81,7 @@ class SettingsPresenter(view: ISettingsView, appSettings: IAppSettings, output: 
             putAnimationType(_animationType)
             putAnimationSpeed(_animationSpeed)
         }
-        _moduleOutput?.confirmSettingsAction()
+
+        getView()?.confirm()
     }
 }

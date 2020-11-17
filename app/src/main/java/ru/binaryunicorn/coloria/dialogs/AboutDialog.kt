@@ -5,14 +5,15 @@ import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import ru.binaryunicorn.coloria.BuildConfig
 import ru.binaryunicorn.coloria.R
+import ru.binaryunicorn.coloria.databinding.AboutDialogBinding
 
 class AboutDialog : DialogFragment()
 {
+    private var _binding: AboutDialogBinding? = null; private val binding get() = _binding!!
+
     companion object
     {
         fun newInstance(): AboutDialog
@@ -30,19 +31,15 @@ class AboutDialog : DialogFragment()
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog
     {
         val context = requireActivity()
-        val view = context.layoutInflater.inflate(R.layout.about_dialog, null)
+        _binding = AboutDialogBinding.inflate(context.layoutInflater)
 
-        // Bind
-        view.findViewById<TextView>(R.id.caption).text = context.applicationInfo.nonLocalizedLabel.toString()
-        view.findViewById<TextView>(R.id.version).text = BuildConfig.VERSION_NAME
+        binding.caption.text = context.applicationInfo.nonLocalizedLabel.toString()
+        binding.version.text = BuildConfig.VERSION_NAME
 
-        view.findViewById<Button>(R.id.rate_button).setOnClickListener {
+        binding.rateButton.setOnClickListener {
             try
             {
-                Intent(Intent.ACTION_VIEW).also {
-                    it.data = Uri.parse("market://details?id=ru.binaryunicorn.coloria")
-                    context.startActivity(it)
-                }
+                context.startActivity( Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=ru.binaryunicorn.coloria")) )
             }
             catch (e: Exception)
             {
@@ -50,9 +47,15 @@ class AboutDialog : DialogFragment()
             }
         }
 
-        return AlertDialog.Builder(requireActivity()).also {
-            it.setView(view)
+        return AlertDialog.Builder(context).also {
+            it.setView(binding.root)
             it.setPositiveButton(resources.getString(R.string.ok)) { _, _ -> dismiss() }
         }.create()
+    }
+
+    override fun onDestroyView()
+    {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -1,7 +1,7 @@
 package ru.binaryunicorn.coloria.managers.appsettings
 
-import ru.binaryunicorn.coloria.enums.AnimationSpeed
-import ru.binaryunicorn.coloria.enums.AnimationType
+import ru.binaryunicorn.coloria.extra.enums.AnimationSpeed
+import ru.binaryunicorn.coloria.extra.enums.AnimationType
 
 interface IAppSettings
 {

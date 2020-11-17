@@ -28,13 +28,6 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.5" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/right_guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.6" />
-
         <TextView
             android:id="@+id/horizontal_label"
             android:layout_width="0dp"
@@ -71,13 +64,13 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:ems="10"
-            android:importantForAutofill="no"
             android:inputType="number"
             android:textSize="@dimen/regularEdittextFontSize"
             app:layout_constraintEnd_toStartOf="@+id/middle_guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/horizontal_label"
-            tools:text="4" />
+            tools:text="4"
+            android:importantForAutofill="no" />
 
         <EditText
             android:id="@+id/vertical_value"
@@ -87,13 +80,13 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:ems="10"
-            android:importantForAutofill="no"
             android:inputType="number"
             android:textSize="@dimen/regularEdittextFontSize"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/middle_guideline"
             app:layout_constraintTop_toBottomOf="@+id/vertival_label"
-            tools:text="4" />
+            tools:text="4"
+            android:importantForAutofill="no" />
 
         <CheckBox
             android:id="@+id/sound_checkBox"
@@ -103,7 +96,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:text="@string/tap_sound_enable"
-            app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+            app:layout_constraintEnd_toStartOf="@+id/middle_guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/horizontal_value" />
 
@@ -112,26 +105,25 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:text="@string/animation_enabled"
-            app:layout_constraintEnd_toStartOf="@+id/right_guideline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sound_checkBox" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/middle_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/vertical_value" />
 
         <TextView
             android:id="@+id/animationType_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginTop="16dp"
             android:labelFor="@id/animationType_value"
             android:text="@string/animation_type"
             android:textSize="@dimen/regularFontSize"
-            app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+            app:layout_constraintEnd_toStartOf="@+id/middle_guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/animation_checkBox" />
+            app:layout_constraintTop_toBottomOf="@+id/sound_checkBox" />
 
         <Spinner
             android:id="@+id/animationType_value"
@@ -140,7 +132,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+            app:layout_constraintEnd_toStartOf="@+id/middle_guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/animationType_label" />
 
@@ -154,9 +146,9 @@
             android:labelFor="@id/animationSpeed_value"
             android:text="@string/animation_speed"
             android:textSize="@dimen/regularFontSize"
-            app:layout_constraintEnd_toStartOf="@+id/right_guideline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/animationType_value" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/middle_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/animation_checkBox" />
 
         <Spinner
             android:id="@+id/animationSpeed_value"
@@ -165,13 +157,13 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/right_guideline"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/middle_guideline"
             app:layout_constraintTop_toBottomOf="@+id/animationSpeed_label" />
 
         <Button
             android:id="@+id/confirm_button"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/setting_apply"

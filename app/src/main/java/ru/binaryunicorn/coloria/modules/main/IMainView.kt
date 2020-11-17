@@ -4,13 +4,9 @@ import ru.binaryunicorn.coloria.pattern.IMvpView
 
 interface IMainView : IMvpView
 {
-    fun backAction()
-    fun fullscreenMode(isFullscreen: Boolean)
+    fun fullscreenMode(enabled: Boolean)
 
-    fun openTiletap()
-    fun openSettings()
-    fun openAbout()
-    fun closeSettings()
-
-    fun showFieldSizeError()
+    fun back()
+    fun showAboutDialog()
+    fun showAlertMessage(msg: String)
 }

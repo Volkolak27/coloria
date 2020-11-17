@@ -4,141 +4,97 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
-import android.widget.*
+import android.widget.AdapterView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import ru.binaryunicorn.coloria.App
 import ru.binaryunicorn.coloria.R
-import ru.binaryunicorn.coloria.enums.AnimationSpeed
-import ru.binaryunicorn.coloria.enums.AnimationType
-import ru.binaryunicorn.coloria.modules.ModuleStorage
-import ru.binaryunicorn.coloria.modules.settings.ISettingsPresenter
+import ru.binaryunicorn.coloria.databinding.SettingsFragmentBinding
+import ru.binaryunicorn.coloria.extra.enums.AnimationSpeed
+import ru.binaryunicorn.coloria.extra.enums.AnimationType
 import ru.binaryunicorn.coloria.modules.settings.ISettingsView
+import ru.binaryunicorn.coloria.modules.settings.SharedSettingsViewModel
 import ru.binaryunicorn.coloria.modules.settings.presenters.SettingsPresenter
-import ru.binaryunicorn.coloria.modules.tiletap.presenters.TiletapPresenter
-import ru.binaryunicorn.coloria.pattern.BasePresenter
+import javax.inject.Inject
 
 class SettingsFragment : Fragment(), ISettingsView
 {
-    private var _presenter: ISettingsPresenter? = null
-
-    private var _horizontalValue: EditText? = null
-    private var _vertivalValue: EditText? = null
-    private var _soundCheckBox: CheckBox? = null
-    private var _animationCheckBox: CheckBox? = null
-    private var _animationType: Spinner? = null
-    private var _animationSpeed: Spinner? = null
-    private var _confirmButton: Button? = null
-
-    companion object
-    {
-        fun newInstance(): SettingsFragment
-        {
-            val args = Bundle()
-
-            return SettingsFragment().also {
-                it.arguments = args
-            }
-        }
-    }
-
-    fun inject(presenter: ISettingsPresenter)
-    {
-        _presenter = presenter
-    }
+    @Inject lateinit var presenter: SettingsPresenter
+    override var initializated = false
+    private var _binding: SettingsFragmentBinding? = null
+	private val _sharedSettingsViewModel: SharedSettingsViewModel by activityViewModels()
 
     //// IMvpView ////
 
-    override fun bind(view: View)
+    override fun viewSelfSetup()
     {
-        _horizontalValue = view.findViewById(R.id.horizontal_value)
-        _vertivalValue = view.findViewById(R.id.vertical_value)
-        _soundCheckBox = view.findViewById(R.id.sound_checkBox)
-        _animationCheckBox = view.findViewById(R.id.animation_checkBox)
-        _animationType = view.findViewById(R.id.animationType_value)
-        _animationSpeed = view.findViewById(R.id.animationSpeed_value)
-        _confirmButton = view.findViewById(R.id.confirm_button)
-    }
+        val context = requireActivity()
+        _binding?.animationTypeValue?.adapter = AnimationType.stringAdapter(context)
+        _binding?.animationSpeedValue?.adapter = AnimationSpeed.stringAdapter(context)
 
-    override fun setupUserInteractions()
-    {
-        _horizontalValue?.addTextChangedListener(
+        _binding?.horizontalValue?.addTextChangedListener(
             object : TextWatcher
             {
-                override fun afterTextChanged(s: Editable?)
-                {
-                    // empty
-                }
-
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int)
-                {
-                    // empty
-                }
+                override fun afterTextChanged(s: Editable?) {}
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
                 {
                     val string = s.toString()
-                    if (string.isNotEmpty()) { _presenter?.horizontalCountChanged(string.toInt()) }
+                    presenter.horizontalCountChanged( if (string.isNotEmpty()) string.toInt() else 0 )
                 }
             }
         )
 
-        _vertivalValue?.addTextChangedListener(
+        _binding?.verticalValue?.addTextChangedListener(
             object : TextWatcher
             {
-                override fun afterTextChanged(s: Editable?)
-                {
-                    // empty
-                }
-
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int)
-                {
-                    // empty
-                }
+                override fun afterTextChanged(s: Editable?) {}
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int)
                 {
                     val string = s.toString()
-                    if (string.isNotEmpty()) { _presenter?.verticalCountChanged(string.toInt()) }
+                    presenter.verticalCountChanged( if (string.isNotEmpty()) string.toInt() else 0 )
                 }
             }
         )
 
-        _soundCheckBox?.setOnCheckedChangeListener {
-                _, isChecked ->
-                _presenter?.tapSoundEnableChanged(isChecked)
+        _binding?.soundCheckBox?.setOnCheckedChangeListener {
+            _, isChecked -> presenter.tapSoundEnableChanged(isChecked)
         }
 
-        _animationCheckBox?.setOnCheckedChangeListener {
-                _, isChecked ->
+        _binding?.animationCheckBox?.setOnCheckedChangeListener {
+            _, isChecked ->
                 checkAvilibleOfAnimationBlock()
-                _presenter?.animationEnableChanged(isChecked)
+                presenter.animationEnableChanged(isChecked)
         }
 
-        _animationType?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?)
+        _binding?.animationTypeValue?.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener
             {
-                // empty
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long)
+                {
+                    presenter.animationTypeChanged(AnimationType.fromId(position))
+                }
             }
 
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long)
+        _binding?.animationSpeedValue?.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener
             {
-                _presenter?.animationTypeChanged(AnimationType.fromId(position))
-            }
-        }
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
 
-        _animationSpeed?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?)
-            {
-                // empty
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long)
+                {
+                    presenter.animationSpeedChanged(AnimationSpeed.fromId(position))
+                }
             }
 
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long)
-            {
-                _presenter?.animationSpeedChanged(AnimationSpeed.fromId(position))
-            }
-        }
-
-        _confirmButton?.setOnClickListener {
-            _ -> _presenter?.confirmAction()
+        _binding?.confirmButton?.setOnClickListener {
+            _ -> presenter.confirmAction()
         }
     }
 
@@ -146,35 +102,25 @@ class SettingsFragment : Fragment(), ISettingsView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        val context = requireActivity()
-        val view = inflater.inflate(R.layout.settings_fragment, container, false)
+        _binding = SettingsFragmentBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
-        bind(view)
+        App.appComponent.inject(this)
 
-        if (savedInstanceState == null)
-        {
-            // empty
-        }
-        else
-        {
-            savedInstanceState.getString(BasePresenter.PRESENTER_GUID)?.let {
-				_presenter = ModuleStorage.obtainPresenter(it) as SettingsPresenter
-				_presenter?.attachView(this)
-			}
-        }
-
-        _animationType?.adapter = AnimationType.stringAdapter(context)
-        _animationSpeed?.adapter = AnimationSpeed.stringAdapter(context)
-
-        _presenter?.viewIsReady()
-        setupUserInteractions()
-        return view
+        presenter.attachView(this)
+        presenter.viewIsReady()
+        return _binding?.root
     }
 
-    override fun onSaveInstanceState(outState: Bundle)
+    override fun onResume()
     {
-        super.onSaveInstanceState(outState)
-        outState.putString(BasePresenter.PRESENTER_GUID, _presenter?.getGUID())
+        super.onResume()
+        initializated = true
+    }
+
+    override fun onDestroyView()
+    {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater)
@@ -187,7 +133,7 @@ class SettingsFragment : Fragment(), ISettingsView
     {
         when (item.itemId)
         {
-            R.id.action_apply -> _presenter?.confirmAction()
+            R.id.action_apply -> presenter.confirmAction()
         }
 
         return super.onOptionsItemSelected(item)
@@ -197,41 +143,47 @@ class SettingsFragment : Fragment(), ISettingsView
 
     override fun updateHorizontalCount(count: Int)
     {
-        _horizontalValue?.setText(count.toString())
+        _binding?.horizontalValue?.setText(count.toString())
     }
 
     override fun updateVerticalCount(count: Int)
     {
-        _vertivalValue?.setText(count.toString())
+        _binding?.verticalValue?.setText(count.toString())
     }
 
     override fun updateTapSoundEnable(enabled: Boolean)
     {
-        _soundCheckBox?.isChecked = enabled
+        _binding?.soundCheckBox?.isChecked = enabled
     }
 
     override fun updateAnimationEnable(enabled: Boolean)
     {
-        _animationCheckBox?.isChecked = enabled
+        _binding?.animationCheckBox?.isChecked = enabled
         checkAvilibleOfAnimationBlock()
     }
 
     override fun updateAnimationType(type: AnimationType)
     {
-        _animationType?.setSelection(type.id())
+        _binding?.animationTypeValue?.setSelection(type.id())
     }
 
     override fun updateAnimationSpeed(speed: AnimationSpeed)
     {
-        _animationSpeed?.setSelection(speed.id())
+        _binding?.animationSpeedValue?.setSelection(speed.id())
+    }
+
+    override fun confirm()
+    {
+        _sharedSettingsViewModel.settingsDidChange()
+        findNavController().popBackStack()
     }
 
     //// Private ////
 
     private fun checkAvilibleOfAnimationBlock()
     {
-        val isAvailable = _animationCheckBox?.isChecked ?: false
-        _animationType?.isEnabled = isAvailable
-        _animationSpeed?.isEnabled = isAvailable
+        val isAvailable = _binding?.animationCheckBox?.isChecked ?: false
+        _binding?.animationTypeValue?.isEnabled = isAvailable
+        _binding?.animationSpeedValue?.isEnabled = isAvailable
     }
 }
