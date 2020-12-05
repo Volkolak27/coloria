@@ -13,14 +13,14 @@ import ru.binaryunicorn.coloria.R
 import ru.binaryunicorn.coloria.databinding.SettingsFragmentBinding
 import ru.binaryunicorn.coloria.extra.enums.AnimationSpeed
 import ru.binaryunicorn.coloria.extra.enums.AnimationType
+import ru.binaryunicorn.coloria.modules.settings.ISettingsPresenter
 import ru.binaryunicorn.coloria.modules.settings.ISettingsView
 import ru.binaryunicorn.coloria.modules.settings.SharedSettingsViewModel
-import ru.binaryunicorn.coloria.modules.settings.presenters.SettingsPresenter
 import javax.inject.Inject
 
 class SettingsFragment : Fragment(), ISettingsView
 {
-    @Inject lateinit var presenter: SettingsPresenter
+    @Inject lateinit var presenter: ISettingsPresenter
     override var initializated = false
     private var _binding: SettingsFragmentBinding? = null
 	private val _sharedSettingsViewModel: SharedSettingsViewModel by activityViewModels()

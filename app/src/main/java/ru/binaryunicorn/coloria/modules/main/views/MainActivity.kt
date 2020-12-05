@@ -11,14 +11,14 @@ import ru.binaryunicorn.coloria.App
 import ru.binaryunicorn.coloria.R
 import ru.binaryunicorn.coloria.databinding.MainActivityBinding
 import ru.binaryunicorn.coloria.dialogs.AboutDialog
+import ru.binaryunicorn.coloria.modules.main.IMainPresenter
 import ru.binaryunicorn.coloria.modules.main.IMainView
 import ru.binaryunicorn.coloria.modules.main.SharedMainViewModel
-import ru.binaryunicorn.coloria.modules.main.presenters.MainPresenter
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), IMainView
 {
-	@Inject lateinit var presenter: MainPresenter
+	@Inject lateinit var presenter: IMainPresenter
 	override var initializated = false
 	private lateinit var _binding: MainActivityBinding
 	private val _sharedMainViewModel: SharedMainViewModel by viewModels()

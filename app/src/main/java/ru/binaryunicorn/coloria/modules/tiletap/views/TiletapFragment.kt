@@ -12,13 +12,13 @@ import ru.binaryunicorn.coloria.R
 import ru.binaryunicorn.coloria.databinding.TiletapFragmentBinding
 import ru.binaryunicorn.coloria.modules.main.SharedMainViewModel
 import ru.binaryunicorn.coloria.modules.settings.SharedSettingsViewModel
+import ru.binaryunicorn.coloria.modules.tiletap.ITiletapPresenter
 import ru.binaryunicorn.coloria.modules.tiletap.ITiletapView
-import ru.binaryunicorn.coloria.modules.tiletap.presenters.TiletapPresenter
 import javax.inject.Inject
 
 class TiletapFragment : Fragment(), ITiletapView
 {
-    @Inject lateinit var presenter: TiletapPresenter
+    @Inject lateinit var presenter: ITiletapPresenter
     override var initializated = false
     private var _binding: TiletapFragmentBinding? = null
     private val _sharedMainViewModel: SharedMainViewModel by activityViewModels()

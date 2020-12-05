@@ -6,9 +6,8 @@ import ru.binaryunicorn.coloria.managers.appsettings.IAppSettings
 import ru.binaryunicorn.coloria.modules.settings.ISettingsPresenter
 import ru.binaryunicorn.coloria.modules.settings.ISettingsView
 import ru.binaryunicorn.coloria.pattern.BasePresenter
-import javax.inject.Inject
 
-class SettingsPresenter @Inject constructor(appSettings: IAppSettings) : BasePresenter<ISettingsView>(), ISettingsPresenter
+class SettingsPresenter constructor(appSettings: IAppSettings) : BasePresenter<ISettingsView>(), ISettingsPresenter
 {
     private val _appSettings: IAppSettings = appSettings
 

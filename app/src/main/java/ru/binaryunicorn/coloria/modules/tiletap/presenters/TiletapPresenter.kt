@@ -10,9 +10,8 @@ import ru.binaryunicorn.coloria.modules.tiletap.ITiletapPresenter
 import ru.binaryunicorn.coloria.modules.tiletap.ITiletapView
 import ru.binaryunicorn.coloria.pattern.BasePresenter
 import java.util.*
-import javax.inject.Inject
 
-class TiletapPresenter @Inject constructor(appSettings: IAppSettings) : BasePresenter<ITiletapView>(), ITiletapPresenter
+class TiletapPresenter constructor(appSettings: IAppSettings) : BasePresenter<ITiletapView>(), ITiletapPresenter
 {
     private val _appSettings: IAppSettings = appSettings
 

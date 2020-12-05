@@ -4,9 +4,8 @@ import ru.binaryunicorn.coloria.managers.appsettings.IAppSettings
 import ru.binaryunicorn.coloria.modules.main.IMainPresenter
 import ru.binaryunicorn.coloria.modules.main.IMainView
 import ru.binaryunicorn.coloria.pattern.BasePresenter
-import javax.inject.Inject
 
-class MainPresenter @Inject constructor(appSettings: IAppSettings) : BasePresenter<IMainView>(), IMainPresenter
+class MainPresenter constructor(appSettings: IAppSettings) : BasePresenter<IMainView>(), IMainPresenter
 {
     private val _appSettings: IAppSettings = appSettings
 
