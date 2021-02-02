@@ -14,7 +14,7 @@ class MainPresenter constructor(appSettings: IAppSettings) : BasePresenter<IMain
     override fun fullscreenModeChanged(enabled: Boolean)
     {
         _appSettings.putFullScreenMode(enabled)
-        getView()?.fullscreenMode(enabled)
+        view?.fullscreenMode(enabled)
     }
 
     override fun backAction()
@@ -22,21 +22,21 @@ class MainPresenter constructor(appSettings: IAppSettings) : BasePresenter<IMain
         if (_appSettings.isFullScreenMode())
         {
             _appSettings.putFullScreenMode(false)
-            getView()?.fullscreenMode(false)
+            view?.fullscreenMode(false)
         }
         else
         {
-            getView()?.back()
+            view?.back()
         }
     }
 
     override fun toAboutAction()
     {
-        getView()?.showAboutDialog()
+        view?.showAboutDialog()
     }
 
     override fun alertMessageAction(msg: String)
     {
-        getView()?.showAlertMessage(msg)
+        view?.showAlertMessage(msg)
     }
 }

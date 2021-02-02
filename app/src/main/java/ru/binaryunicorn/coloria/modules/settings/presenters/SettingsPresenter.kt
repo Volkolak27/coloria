@@ -24,12 +24,12 @@ class SettingsPresenter constructor(appSettings: IAppSettings) : BasePresenter<I
     {
         super.viewIsReady()
 
-        getView()?.updateHorizontalCount(_horizontalCount)
-        getView()?.updateVerticalCount(_verticalCount)
-        getView()?.updateTapSoundEnable(_tapSoundEnable)
-        getView()?.updateAnimationEnable(_animationEnabled)
-        getView()?.updateAnimationType(_animationType)
-        getView()?.updateAnimationSpeed(_animationSpeed)
+        view?.updateHorizontalCount(_horizontalCount)
+        view?.updateVerticalCount(_verticalCount)
+        view?.updateTapSoundEnable(_tapSoundEnable)
+        view?.updateAnimationEnable(_animationEnabled)
+        view?.updateAnimationType(_animationType)
+        view?.updateAnimationSpeed(_animationSpeed)
     }
 
     //// ISettingsPresenter ////
@@ -81,6 +81,6 @@ class SettingsPresenter constructor(appSettings: IAppSettings) : BasePresenter<I
             putAnimationSpeed(_animationSpeed)
         }
 
-        getView()?.confirm()
+        view?.confirm()
     }
 }

@@ -7,6 +7,7 @@ class App : Application()
 {
     companion object
     {
+        const val LOGTAG = "ColoriaTag"
         lateinit var appComponent: AppComponent
     }
 
@@ -14,7 +15,6 @@ class App : Application()
     {
         companion object
         {
-            const val LOGTAG = "ColoriaTag"
             const val DEFAULT_TILES_COUNT_ON_HORIZONTAL = 4
             const val DEFAULT_TILES_COUNT_ON_VERTICAL = 4
 

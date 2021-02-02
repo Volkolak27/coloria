@@ -54,7 +54,7 @@ class TilesView(context: Context, attrs: AttributeSet) : GLSurfaceView(context, 
         val bundle = Bundle()
 
         bundle.putParcelable("superState", super.onSaveInstanceState())
-        bundle.putInt(KEY_COUNT_OF_HORIZONTAL_TILES, _tilesOnHeight)
+        bundle.putInt(KEY_COUNT_OF_HORIZONTAL_TILES, _tilesOnWidth)
         bundle.putInt(KEY_COUNT_OF_VERTICAL_TILES, _tilesOnHeight)
         bundle.putBoolean(KEY_SOUND_ENABLED, _soundEnabled)
         bundle.putBoolean(KEY_RGB_TEST_ENABLED, _rgbTest)

@@ -11,10 +11,10 @@ class RgbColor(red: Int, green: Int, blue: Int)
         set(value)
         {
             field = if (value < 0) {
-                        Log.e(App.Consts.LOGTAG, "Красный меньше 0 При работе с цветом")
+                        Log.e(App.LOGTAG, "Красный меньше 0 При работе с цветом")
                         0
                     } else if (value > 255) {
-                        Log.e(App.Consts.LOGTAG, "Красный больше 255 при работе с цветом")
+                        Log.e(App.LOGTAG, "Красный больше 255 при работе с цветом")
                         255
                     } else {
                         value
@@ -25,10 +25,10 @@ class RgbColor(red: Int, green: Int, blue: Int)
         set(value)
         {
             field = if (value < 0) {
-                        Log.e(App.Consts.LOGTAG, "Зеленый меньше 0 при работе с цветом")
+                        Log.e(App.LOGTAG, "Зеленый меньше 0 при работе с цветом")
                         0
                     } else if (value > 255) {
-                        Log.e(App.Consts.LOGTAG, "Зеленый больше 255 при работе с цветом")
+                        Log.e(App.LOGTAG, "Зеленый больше 255 при работе с цветом")
                         255
                     } else {
                         value
@@ -39,10 +39,10 @@ class RgbColor(red: Int, green: Int, blue: Int)
         set(value)
         {
             field = if (value < 0) {
-                        Log.e(App.Consts.LOGTAG, "Синий меньше 0 при работе с цветом")
+                        Log.e(App.LOGTAG, "Синий меньше 0 при работе с цветом")
                         0
                     } else if (value > 255) {
-                        Log.e(App.Consts.LOGTAG, "Синий больше 255 при работе с цветом")
+                        Log.e(App.LOGTAG, "Синий больше 255 при работе с цветом")
                         255
                     } else {
                         value

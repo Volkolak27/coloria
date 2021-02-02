@@ -23,10 +23,10 @@ class TiletapPresenter constructor(appSettings: IAppSettings) : BasePresenter<IT
     {
         super.viewIsReady()
 
-        getView()?.updateFieldSize(_appSettings.obtainHorizontalCount(), _appSettings.obtainVerticalCount())
-        getView()?.updateTapSound(_appSettings.isTapSoundEnabled())
-        getView()?.updateAnimation(_appSettings.isAnimationEnabled())
-        getView()?.updateFullscreenMode(_appSettings.isFullScreenMode())
+        view?.updateFieldSize(_appSettings.obtainHorizontalCount(), _appSettings.obtainVerticalCount())
+        view?.updateTapSound(_appSettings.isTapSoundEnabled())
+        view?.updateAnimation(_appSettings.isAnimationEnabled())
+        view?.updateFullscreenMode(_appSettings.isFullScreenMode())
 
         checkAnimationFunc()
     }
@@ -42,30 +42,30 @@ class TiletapPresenter constructor(appSettings: IAppSettings) : BasePresenter<IT
     {
         _appSettings.putHorizontalCount(horizontalCount)
         _appSettings.putVerticalCount(verticalCount)
-        getView()?.updateFieldSize(horizontalCount, verticalCount)
+        view?.updateFieldSize(horizontalCount, verticalCount)
     }
 
     override fun fullscreenModeChanged(enabled: Boolean)
     {
         _appSettings.putFullScreenMode(enabled)
-        getView()?.updateFullscreenMode(enabled)
+        view?.updateFullscreenMode(enabled)
     }
 
     override fun rgbTestAction()
     {
-        getView()?.openRgbTest()
+        view?.openRgbTest()
     }
 
     override fun tapSoundChanged(enabled: Boolean)
     {
         _appSettings.putTapSoundEnabled(enabled)
-        getView()?.updateTapSound(enabled)
+        view?.updateTapSound(enabled)
     }
 
     override fun animationChanged(enabled: Boolean)
     {
         _appSettings.putAnimationEnabled(enabled)
-        getView()?.updateAnimation(enabled)
+        view?.updateAnimation(enabled)
         checkAnimationFunc()
     }
 
@@ -81,19 +81,19 @@ class TiletapPresenter constructor(appSettings: IAppSettings) : BasePresenter<IT
 
         _appSettings.putHorizontalCount(horizontalSize)
         _appSettings.putVerticalCount(verticalSize)
-        getView()?.updateFieldSize(horizontalSize, verticalSize)
+        view?.updateFieldSize(horizontalSize, verticalSize)
     }
 
     override fun toSettingsAction()
     {
-        getView()?.openSettings()
+        view?.openSettings()
     }
 
     //// Private ////
 
     private fun animateStep()
     {
-        if (getView() == null) return
+        if (view == null) return
 
         val horizontalSize = _appSettings.obtainHorizontalCount()
         val verticalSize = _appSettings.obtainVerticalCount()
@@ -105,7 +105,7 @@ class TiletapPresenter constructor(appSettings: IAppSettings) : BasePresenter<IT
             {
                 for (x in 0 until horizontalSize)
                 {
-                    getView()?.updateTileWithRandomColor(x, y)
+                    view?.updateTileWithRandomColor(x, y)
                 }
             }
         }
@@ -125,27 +125,27 @@ class TiletapPresenter constructor(appSettings: IAppSettings) : BasePresenter<IT
             for (i in 0 until tilesToChange.toInt())
             {
                 // одна и таже плитка может окрашиваться несколько раз, это хорошо - обеспечиваем "случайность" количества действа
-                getView()?.updateTileWithRandomColor(horizontalRandomGen.nextInt(horizontalSize), verticalRandomGen.nextInt(verticalSize))
+                view?.updateTileWithRandomColor(horizontalRandomGen.nextInt(horizontalSize), verticalRandomGen.nextInt(verticalSize))
             }
         }
 
-        getView()?.refreshTiletapField()
+        view?.refreshTiletapField()
     }
 
     private fun recreateTiletap()
     {
         try
         {
-            getView()?.updateFieldSize(_appSettings.obtainHorizontalCount(), _appSettings.obtainVerticalCount())
-            getView()?.updateTapSound(_appSettings.isTapSoundEnabled())
-            getView()?.updateAnimation(_appSettings.isAnimationEnabled())
+            view?.updateFieldSize(_appSettings.obtainHorizontalCount(), _appSettings.obtainVerticalCount())
+            view?.updateTapSound(_appSettings.isTapSoundEnabled())
+            view?.updateAnimation(_appSettings.isAnimationEnabled())
         }
         catch (e: OutOfMemoryError)
         {
-            Log.e(App.Consts.LOGTAG, "Размер поля: ${_appSettings.obtainHorizontalCount()} на ${_appSettings.obtainVerticalCount()} - вызвал ошибку OutOfMemoryError")
+            Log.e(App.LOGTAG, "Размер поля: ${_appSettings.obtainHorizontalCount()} на ${_appSettings.obtainVerticalCount()} - вызвал ошибку OutOfMemoryError")
             _appSettings.putHorizontalCount(App.Consts.DEFAULT_TILES_COUNT_ON_HORIZONTAL)
             _appSettings.putVerticalCount(App.Consts.DEFAULT_TILES_COUNT_ON_VERTICAL)
-            getView()?.showFieldSizeError()
+            view?.showFieldSizeError()
         }
 
         checkAnimationFunc()

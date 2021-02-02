@@ -14,7 +14,7 @@ class OpenGlUtils
             val shaderId = GLES20.glCreateShader(shaderType)
             if (shaderId == GLES20.GL_FALSE)
             {
-                Log.e(App.Consts.LOGTAG, "Шейдер не создан (на этапе выбора типа)")
+                Log.e(App.LOGTAG, "Шейдер не создан (на этапе выбора типа)")
                 return 0
             }
 
@@ -26,7 +26,7 @@ class OpenGlUtils
             if (compileStatus[0] == GLES20.GL_FALSE)
             {
                 GLES20.glDeleteShader(shaderId)
-                Log.e(App.Consts.LOGTAG, "Ошибка при компиляции шейдера")
+                Log.e(App.LOGTAG, "Ошибка при компиляции шейдера")
                 return 0
             }
 
@@ -38,7 +38,7 @@ class OpenGlUtils
             val programId = GLES20.glCreateProgram()
             if (programId == GLES20.GL_FALSE)
             {
-                Log.e(App.Consts.LOGTAG, "Ошибка при создании шейдерной программы")
+                Log.e(App.LOGTAG, "Ошибка при создании шейдерной программы")
                 return 0
             }
 
@@ -50,7 +50,7 @@ class OpenGlUtils
             GLES20.glGetProgramiv(programId, GLES20.GL_LINK_STATUS, linkStatus, 0)
             if (linkStatus[0] == GLES20.GL_FALSE)
             {
-                Log.e(App.Consts.LOGTAG, "Ошибка при присоединении шейдеров к шейдерной программе")
+                Log.e(App.LOGTAG, "Ошибка при присоединении шейдеров к шейдерной программе")
                 GLES20.glDeleteProgram(programId)
                 return 0
             }
