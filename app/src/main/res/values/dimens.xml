@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="captionFontSize">18sp</dimen>
-    <dimen name="regularFontSize">14sp</dimen>
-    <dimen name="subsizeFontSize">11sp</dimen>
-
-    <dimen name="regularEdittextFontSize">18sp</dimen>
-</resources>
