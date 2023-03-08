@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<item
+		android:id="@+id/change_to_1x1_item"
+		android:orderInCategory="100"
+		android:title="@string/menu_item_change_to_1x1"
+		app:showAsAction="never" />
+	<item
+		android:id="@+id/change_to_2x2_item"
+		android:orderInCategory="100"
+		android:title="@string/menu_item_change_to_2x2"
+		app:showAsAction="never" />
+	<item
+		android:id="@+id/change_to_16x16_item"
+		android:orderInCategory="100"
+		android:title="@string/menu_item_change_to_16x16"
+		app:showAsAction="never" />
+	<item
+		android:id="@+id/rgb_test_item"
+		android:orderInCategory="100"
+		android:title="@string/menu_item_rgb_test"
+		app:showAsAction="never" />
+	<item
+		android:id="@+id/to_settings_item"
+		android:icon="@drawable/menu_ic_settings"
+		android:orderInCategory="100"
+		android:title="@string/menu_item_to_settings"
+		app:showAsAction="ifRoom" />
+	<item
+		android:id="@+id/full_screen_item"
+		android:orderInCategory="100"
+		android:title="@string/menu_item_full_screen"
+		app:showAsAction="never" />
+	<item
+		android:id="@+id/tap_sound_item"
+		android:checkable="true"
+		android:orderInCategory="100"
+		android:title="@string/menu_item_tap_sound"
+		app:showAsAction="never" />
+	<item
+		android:id="@+id/animation_item"
+		android:checkable="true"
+		android:orderInCategory="100"
+		android:title="@string/menu_item_animation"
+		app:showAsAction="never" />
+</menu>

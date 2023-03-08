@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<ImageView
+		android:id="@+id/logo"
+		android:layout_width="120dp"
+		android:layout_height="120dp"
+		android:layout_marginStart="16dp"
+		android:layout_marginTop="16dp"
+		android:contentDescription="@string/app_name"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:srcCompat="@drawable/img_logo" />
+
+	<TextView
+		android:id="@+id/caption"
+		style="@style/CaptionText"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintBottom_toBottomOf="@+id/logo"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toEndOf="@+id/logo"
+		app:layout_constraintTop_toTopOf="@+id/logo"
+		app:layout_constraintVertical_bias="0.20"
+		tools:text="Наименование" />
+
+	<TextView
+		android:id="@+id/version"
+		style="@style/SubCaptionText"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintEnd_toEndOf="@+id/caption"
+		app:layout_constraintStart_toStartOf="@+id/caption"
+		app:layout_constraintTop_toBottomOf="@+id/caption"
+		tools:text="версия" />
+
+	<TextView
+		android:id="@+id/description"
+		style="@style/RegularText"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="8dp"
+		android:layout_marginEnd="8dp"
+		android:text="@string/about_text"
+		android:textAlignment="center"
+		app:layout_constraintBottom_toBottomOf="@+id/logo"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toEndOf="@+id/logo"
+		app:layout_constraintTop_toTopOf="@+id/logo"
+		app:layout_constraintVertical_bias="0.80" />
+
+	<Button
+		android:id="@+id/rate_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="16dp"
+		android:text="@string/about_rate_now"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/logo" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

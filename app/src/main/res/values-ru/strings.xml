@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+	<string name="apply">Применить</string>
+	<string name="setting_apply">@string/apply</string>
+	<string name="tap_sound_enable">Звук нажатий</string>
+	<string name="about_rate_now">Оценить приложение</string>
+	<string name="about_text">Тестируйте экран или убивайте время</string>
+	<string name="animation_enabled">Включить анимацию</string>
+	<string name="animation_speed">Скорость анимации:</string>
+	<string name="animation_speed_fast">Быстрая</string>
+	<string name="animation_speed_medium">Средняя</string>
+	<string name="animation_speed_slow">Медленная</string>
+	<string name="animation_speed_veryfast">Очень быстрая</string>
+	<string name="animation_type">Тип анимации:</string>
+	<string name="animation_type_big">Много</string>
+	<string name="animation_type_full">Полная (каждый квадрат)</string>
+	<string name="animation_type_half">Половина</string>
+	<string name="animation_type_low">Мало</string>
+	<string name="field_size_error">Размер поля слишком большой для вашего устройства</string>
+	<string name="horizontal">Ширина</string>
+	<string name="menu_item_about">О приложении</string>
+	<string name="menu_item_animation">Анимация</string>
+	<string name="menu_item_full_screen">Полный экран</string>
+	<string name="menu_item_rgb_test">RGB тест</string>
+	<string name="menu_item_tap_sound">Звук нажатий</string>
+	<string name="menu_item_to_settings">Настройки</string>
+	<string name="perfomance_warning_info">Большие значения могут вызвать проблемы с производительностью</string>
+	<string name="vertical">Высота</string>
+</resources>

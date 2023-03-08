@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- TextView styles -->
+
+    <style name="CaptionText" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">@dimen/captionFontSize</item>
+    </style>
+
+    <style name="SubCaptionText" parent="Widget.AppCompat.TextView">
+		<item name="android:textSize">@dimen/subcaptionFontSize</item>
+    </style>
+
+    <style name="RegularText" parent="Widget.AppCompat.TextView">
+		<item name="android:textSize">@dimen/regularFontSize</item>
+    </style>
+
+	<!-- EditText styles -->
+
+	<style name="RegularEditText" parent="Widget.AppCompat.TextView">
+		<item name="android:textSize">@dimen/regularEdittextFontSize</item>
+    </style>
+
+</resources>
